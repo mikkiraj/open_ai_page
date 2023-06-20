@@ -3,13 +3,14 @@ import {Button, TextField, Card} from '@mui/material';
 
 function App() {
   const [request, setRequest] = useState('');
-  const [response, setResponse] = useState('');
+  const [responses, setResponses] = useState([]);
 
   
-  let API_KEY;
+  let API_KEY = "Bearer"
+  ;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponse("Loading...")
+    // setResponse("Loading...")
     console.log(`Request: ${request}`);
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -28,7 +29,9 @@ function App() {
     if (response.ok) {
       const data = await response.json();
       console.log('Form data successfully sent to the API.');
-      setResponse(data.choices[0]['message']['content']);
+      console.log(data.choices[0]['message']['content']);
+      setResponses((prevResponses) => [...prevResponses, data.choices[0]['message']['content']]);
+      // setResponse(data.choices[0]['message']['content']);
     } else {
       console.log('Error sending form data to the API.');
     }
@@ -36,6 +39,10 @@ function App() {
     console.log('An error occurred while sending the form data.', error);
   };
 }
+
+const clearChatHistory = () => {
+  setResponses([]);
+};
 
   return (
     <div>
@@ -46,9 +53,9 @@ function App() {
       <br></br>
       <form onSubmit={handleSubmit}>
         <label>
-          Enter Question Here: 
+          Enter Question Here  :     
 
-          <TextField
+          <TextField 
             type="text"
             value={request}
             onChange={(e) => setRequest(e.target.value)}
@@ -56,7 +63,13 @@ function App() {
         </label>
         <Button type="submit">Submit</Button>
       </form>
-      <p> {response} </p>
+      <div>
+        {responses.map((response, index) => (
+      <div key={index}>{response}</div>
+        ))}
+      </div>
+      <button onClick={clearChatHistory}>Clear Chat History</button>
+
     </div>
   );
 }
