@@ -106,7 +106,7 @@ import { Card } from '@mui/material';
 import ChatBot from './ChatBot';
 
 function App() {
-  const API_KEY = "";
+  const API_KEY = "Bearer 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";
 
   return (
     <div>

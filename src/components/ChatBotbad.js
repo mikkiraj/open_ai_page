@@ -3,7 +3,6 @@ import { Card, TextField, Button } from '@mui/material';
 export function ChatBot({ onClearChatHistory, apiKey }) {
 
 
-    let API_KEY = "Bearer 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"
 
     const [request, setRequest] = useState('');
     const [response, setResponse] = useState('');
