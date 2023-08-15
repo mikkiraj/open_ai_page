@@ -107,7 +107,7 @@ import ChatBot from './components/ChatBot';
 import axios from "axios";
 
 function App() {
-  const API_KEY = "";
+  const API_KEY = "Bearer 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";
 
 const [getMessage, setGetMessage] = useState({})
 //axios here
