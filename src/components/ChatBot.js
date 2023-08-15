@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
-import { Button, Card, TextField , List , Box, CircularProgress} from '@mui/material';
+import { Button, Card, TextField , List , Box, CircularProgress, ClearIcon} from '@mui/material';
+// import  from '@mui/icons-material/Clear';
 
 const ChatBot = ({ apiKey }) => {
   const [request, setRequest] = useState('');
   const [responses, setResponses] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
-  const [requestConversation,setRequestConversation] = useState([]); // need to fix this grrrrrrrrr
+  const [requestConversation,setRequestConversation] = useState([]); 
   const [loading, setLoading] = useState(false);
 
   const clearChatHistory = () => {
     setResponses([]);
     setChatHistory([]);
-  };
-
+    setRequest('');
+  }
+  
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
     console.log(`Request: ${request}`);
-    const prevMessages = chatHistory.map(({ role, content }) => ({ role, content }));
+  
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      const messages = chatHistory.map(({ role, content }) => ({ role, content }));
+      const url = 'http://localhost:8000/flask/embed/';
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,35 +32,40 @@ const ChatBot = ({ apiKey }) => {
         },
         body: JSON.stringify({
           "model": "gpt-3.5-turbo",
-          "messages": [{ "role": "user", "content": request }],
+          // "messages": [{"role": "user", "content": request}, ],
+          "messages": `${request}`, 
           "temperature": 0.7
         }),
       });
+   
+      console.log(response);
+
 
       if (response.ok) {
         setLoading(false);
         const data = await response.json();
         console.log('Form data successfully sent to the API.');
-        console.log(data.choices[0].message.content);
 
-        const botReply = data.choices[0].message.content;
+        const botReply = data.response
+
+        console.log(botReply)
 
         setResponses((prevResponses) => [
           ...prevResponses,
           { userMessage: request, botMessage: botReply },
         ]);
-  
+        
         setChatHistory((prevChatHistory) => [
           ...prevChatHistory,
-          { role: 'user', content: request },
-          { role: 'assistant', content: botReply },
+          { role : 'user', content : request },
+          { role : 'assistant', content: botReply },
+       
         ]);
+        console.log(chatHistory, 'this is chat history', request, botReply)
       } 
       
       else {
         console.log('Error sending form data to the API.');
-        console.log(request);
-        console.log(prevMessages);
       }
     } catch (error) {
       console.log('An error occurred while sending the form data.', error);
@@ -73,7 +83,7 @@ const ChatBot = ({ apiKey }) => {
             onChange={(e) => setRequest(e.target.value)}
             style={{ width: '100%' }} 
             InputProps={{
-              endAdornment: loading && <CircularProgress size={20} />,
+             endAdornment: loading && <CircularProgress size={20} />
             }}
           />
         </Box>

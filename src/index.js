@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from '/Users/mihikarajvanshi/Desktop/cs projects/yash_projects/chatgpt-form/src/components/App';
+import App from '/Users/mihikarajvanshi/Desktop/cs projects/yash_projects/flask_app/chatgpt-form/src/App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
